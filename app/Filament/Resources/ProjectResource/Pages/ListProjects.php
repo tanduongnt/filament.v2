@@ -10,6 +10,8 @@ class ListProjects extends ListRecords
 {
     protected static string $resource = ProjectResource::class;
 
+    protected static ?string $title = 'Danh sách dự án';
+
     protected function getActions(): array
     {
         return [

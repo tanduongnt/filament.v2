@@ -12,4 +12,6 @@ class CreateSystem extends CreateRecord
     use NestedPage;
 
     protected static string $resource = SystemResource::class;
+
+    protected static ?string $title = 'Thêm mới hệ thống';
 }

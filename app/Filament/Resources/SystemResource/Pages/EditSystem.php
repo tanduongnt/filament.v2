@@ -13,6 +13,8 @@ class EditSystem extends EditRecord
 
     protected static string $resource = SystemResource::class;
 
+    protected static ?string $title = 'Cập nhật hệ thống';
+
     protected function getActions(): array
     {
         return [

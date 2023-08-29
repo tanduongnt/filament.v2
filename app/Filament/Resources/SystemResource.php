@@ -2,32 +2,32 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Livewire\Event;
+use Closure;
 use Filament\Tables;
 use App\Models\System;
+use Illuminate\Support\Str;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
-use Filament\Resources\Resource;
+use Filament\Resources\Pages\Page;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\ProjectResource;
 use App\Filament\Resources\SystemResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\SystemResource\RelationManagers;
 use SevendaysDigital\FilamentNestedResources\NestedResource;
-use SevendaysDigital\FilamentNestedResources\ResourcePages\NestedPage;
-use SevendaysDigital\FilamentNestedResources\Columns\ChildResourceLink;
 
 class SystemResource extends NestedResource
 {
     protected static ?string $model = System::class;
 
+    protected static ?string $recordTitleAttribute = 'name';
+
     protected static ?string $slug = 'systems';
+
+    //protected static ?string $pluralModelLabel = 'Hệ thống';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -41,6 +41,16 @@ class SystemResource extends NestedResource
         return ProjectResource::class;
     }
 
+    public static function getPluralModelLabel(): string
+    {
+        return 'Hệ thống';
+    }
+
+    public static function getModelLabel(): string
+    {
+        return 'Hệ thống';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -48,11 +58,21 @@ class SystemResource extends NestedResource
                 Select::make('project_id')
                     ->relationship('project', 'name'),
                 TextInput::make('name')
+                    ->reactive()
+                    ->afterStateUpdated(function (Closure $set, $state) {
+                        $set('slug', Str::slug($state));
+                    })
                     ->required(),
-                TextInput::make('slug'),
+                TextInput::make('slug')
+                    ->disabled()
+                    ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord),
                 TextInput::make('sort')
                     ->nullable()
                     ->numeric(),
+                Select::make('technicians')
+                    ->relationship('technicians', 'name')
+                    ->multiple()
+                    ->label('Kỹ thuật viên'),
                 TextInput::make('description')
                     ->nullable(),
             ]);
@@ -77,6 +97,7 @@ class SystemResource extends NestedResource
                     ->searchable()
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -96,6 +117,7 @@ class SystemResource extends NestedResource
         return [
             'index' => Pages\ListSystems::route('/'),
             'create' => Pages\CreateSystem::route('/create'),
+            'view' => Pages\ViewSystem::route('/{record}'),
             'edit' => Pages\EditSystem::route('/{record}/edit'),
         ];
     }

@@ -18,6 +18,7 @@ class System extends Model
     protected $fillable = [
         'project_id',
         'recurring_id',
+        'slug',
         'code',
         'name',
         'description',

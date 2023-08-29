@@ -51,7 +51,7 @@ class Project extends Model
 
     public function managers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class)->withTimestamps();
     }
 
     public function technicians()
