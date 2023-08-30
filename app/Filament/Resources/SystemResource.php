@@ -56,7 +56,8 @@ class SystemResource extends NestedResource
         return $form
             ->schema([
                 Select::make('project_id')
-                    ->relationship('project', 'name'),
+                    ->relationship('project', 'name')
+                    ->disabled(),
                 TextInput::make('name')
                     ->reactive()
                     ->afterStateUpdated(function (Closure $set, $state) {
@@ -69,7 +70,7 @@ class SystemResource extends NestedResource
                 TextInput::make('sort')
                     ->nullable()
                     ->numeric(),
-                Select::make('technicians')
+                Select::make('user_id')
                     ->relationship('technicians', 'name')
                     ->multiple()
                     ->label('Kỹ thuật viên'),

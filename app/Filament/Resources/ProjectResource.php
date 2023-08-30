@@ -22,8 +22,11 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Resources\Pages\CreateRecord;
+use Filament\Forms\Components\CheckboxList;
 use App\Filament\Resources\ProjectResource\Pages;
 use SevendaysDigital\FilamentNestedResources\Columns\ChildResourceLink;
+use App\Filament\Resources\ProjectResource\RelationManagers\SystemsRelationManager;
+use App\Filament\Resources\ProjectResource\RelationManagers\ManagersRelationManager;
 
 class ProjectResource extends Resource
 {
@@ -32,6 +35,8 @@ class ProjectResource extends Resource
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
+
+    protected bool $allowsDuplicates = true;
 
     public static function getPluralModelLabel(): string
     {
@@ -62,7 +67,7 @@ class ProjectResource extends Resource
                 TextInput::make('phone')
                     ->nullable()
                     ->label('Điện thoại'),
-                Select::make('user_id')
+                Select::make('managers')
                     ->relationship('managers', 'name')
                     ->multiple()
                     ->label('Kỹ sư trưởng'),
@@ -101,6 +106,11 @@ class ProjectResource extends Resource
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [];
     }
 
     public static function getPages(): array
