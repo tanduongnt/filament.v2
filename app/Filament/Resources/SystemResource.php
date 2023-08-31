@@ -70,7 +70,7 @@ class SystemResource extends NestedResource
                 TextInput::make('sort')
                     ->nullable()
                     ->numeric(),
-                Select::make('user_id')
+                Select::make('technicians')
                     ->relationship('technicians', 'name')
                     ->multiple()
                     ->label('Kỹ thuật viên'),

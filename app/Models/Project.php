@@ -51,11 +51,6 @@ class Project extends Model
 
     public function managers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)->withTimestamps();
-    }
-
-    public function technicians()
-    {
-        return $this->hasManyDeep(User::class, [System::class, 'system_user'])->distinct();
+        return $this->belongsToMany(User::class);
     }
 }
